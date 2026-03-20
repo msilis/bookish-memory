@@ -64,7 +64,7 @@ export async function captureScreenshot(url: string, recipe: SiteRecipe) {
     }
     await autoScroll(page, recipe.maxScrolls || 1);
 
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(3000);
 
     const timestamp = new Date().toISOString().replace(/:/g, "-");
     const path = `./output/recipe/${recipe.name}_${timestamp}.png`;
