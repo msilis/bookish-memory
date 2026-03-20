@@ -36,7 +36,7 @@ export async function captureScreenshot(url, recipe) {
                     await page.click(selector, { timeout: 3000 });
                 }
                 catch (e) {
-                    console.error("Selector ${selector} not found, skipping...");
+                    console.error(`Selector ${selector} not found, skipping...`);
                 }
             }
         }
@@ -57,6 +57,7 @@ export async function captureScreenshot(url, recipe) {
     }
     catch (e) {
         console.error(e);
+        return null;
     }
     finally {
         await browser.close();
@@ -68,12 +69,16 @@ if (targetUrl) {
     const testRecipe = {
         name: "test",
         viewport: { width: 1280, height: 800 },
+        removeSelectors: ["notice"],
         userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) ...",
-        waitCondition: "networkidle",
+        waitCondition: "domcontentloaded",
         maxScrolls: 1,
     };
     captureScreenshot(targetUrl, testRecipe)
-        .then((path) => console.log(`Saved to ${path}`))
+        .then((path) => {
+        if (path)
+            console.log(`Saved to ${path}`);
+    })
         .catch((err) => console.error(err));
 }
 else {
