@@ -9,6 +9,16 @@ async function autoScroll(page: Page, maxScrolls: number) {
       let distance = 400;
       let scrolls = 0;
 
+      const forceScroll = (element: HTMLElement) => {
+        if (!element) return;
+        element.style.setProperty("overflow", "auto", "important");
+        element.style.setProperty("height", "auto", "important");
+        element.style.setProperty("position", "relative", "important");
+      };
+
+      forceScroll(document.documentElement);
+      forceScroll(document.body);
+
       const timer = setInterval(() => {
         const scrollHeight = document.body.scrollHeight;
         window.scrollBy(0, distance);
@@ -58,6 +68,12 @@ export async function captureScreenshot(url: string, recipe: SiteRecipe) {
 
     const timestamp = new Date().toISOString().replace(/:/g, "-");
     const path = `./output/recipe/${recipe.name}_${timestamp}.png`;
+
+    const fs = require("fs");
+    const dir = `./output/recipe`;
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
 
     await page.screenshot({
       path,
